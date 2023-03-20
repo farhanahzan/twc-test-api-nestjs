@@ -1,30 +1,51 @@
-import { Controller, Get, Param, Post,Body ,Req} from '@nestjs/common';
-import {} from '@nestjs/common/decorators'
+import {
+  Controller,
+  Get,
+  Param,
+  Post,
+  Body,
+  Req,
+  UseGuards,
+  Delete,
+} from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { Contact } from './schema/contact.schema';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('contact')
 export class ContactController {
-    constructor(private contactService:ContactService){}
+  constructor(private contactService: ContactService) {}
 
-    @Get()
-    async getAllContacts():Promise<Contact[]>{
-        return this.contactService.findAll()
-    }
+  @Get()
+  @UseGuards(AuthGuard())
+  async getAllContacts(
+    @Req()
+    req,
+  ): Promise<Contact[]> {
+    return this.contactService.findAll(req.user);
+  }
 
-    @Get(':_id')
-    async getContactById(@Param('_id') _id:string):Promise<Contact>{
-        return this.contactService.findContactById(_id);
-    }
+  @Get(':_id')
+  @UseGuards(AuthGuard())
+  async getContactById(@Param('_id') _id: string): Promise<Contact> {
+    return this.contactService.findContactById(_id);
+  }
 
-    @Post()
-    async createcontact(
-        @Body()
-        contact:CreateContactDto,
-        @Req()
-        req
-    ):Promise<Contact>{
-        return this.contactService.createContact(contact, req.user)
-    }
+  @Post()
+  @UseGuards(AuthGuard())
+  async createcontact(
+    @Body()
+    contact: CreateContactDto,
+    @Req()
+    req,
+  ): Promise<Contact> {
+    return this.contactService.createContact(contact, req.user);
+  }
+
+  @Delete(':_id')
+  @UseGuards(AuthGuard())
+  async deleteContactById(@Param('_id') _id: string): Promise<Contact> {
+    return this.contactService.deleteContactById(_id);
+  }
 }

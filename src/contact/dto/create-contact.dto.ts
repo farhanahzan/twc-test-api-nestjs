@@ -1,3 +1,4 @@
+import { Transform } from 'class-transformer';
 import {
   IsNotEmpty,
   IsString,
@@ -5,11 +6,11 @@ import {
   IsEmail,
   IsIn,
   IsEmpty,
+  IsPhoneNumber,
 } from 'class-validator';
 import { User } from '../../user/schema/user.schema';
 
-
-const selected_genders = ['male', 'female']
+const selected_genders = ['male', 'female'];
 
 export class CreateContactDto {
   @IsNotEmpty()
@@ -21,7 +22,8 @@ export class CreateContactDto {
   readonly email: string;
 
   @IsNotEmpty()
-  @Matches('07[1,2,5,6,7,8][0-9]+')
+  // @Transform((value) => value.toString())
+  // @IsPhoneNumber('LK',)
   readonly phonenumber: string;
 
   @IsNotEmpty()

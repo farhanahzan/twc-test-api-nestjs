@@ -3,7 +3,7 @@ import {
   IsNotEmpty,
   IsString,
   MinLength,
-} from 'class-validator/types/decorator/decorators';
+} from 'class-validator';
 
 export class LoginDto{
     @IsNotEmpty()
